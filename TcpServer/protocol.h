@@ -1,0 +1,81 @@
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
+
+#include<stdlib.h>
+#include<unistd.h>
+#include<string.h>
+
+typedef unsigned int uint;
+
+#define REGIST_OK "regist_ok"
+#define REGIST_FAIL "regist_fail:name existed"
+
+#define LOGIN_OK "login_ok"
+#define LOGIN_FAIL "login_fail:name or pwdor error or relogin"
+
+#define SEARCH_USR_NO "no such people"
+#define SEARCH_USR_OFFLINE "OFFLINE"
+#define SEARCH_USR_ONLINE "ONLINE"
+
+#define UNKNOWERRO "UNKNOW ERROR"
+#define EXISTED_FRIEND "EXISTF FRIEND"
+#define ADD_FRIEND_OFFLINE "USER OFFLINE"
+#define REQUEST_SENT "REQUEST SENT"
+
+#define DELETE_FRIEND_OK "DELETE FRIEND OK"
+#define DELETE_FRIEND_FAIL "DELETE FRIEND FAIL"
+
+#define DIR_NOT_EXISTS "DIR NOT EXISTS"
+#define FILENAME_OR_DIR_EXIST "FILENAME OR DIR EXISTS"
+#define CREATE_DIR_OK "CREARTE DIR OK"
+
+enum ENUM_MSG_TYPE{
+  ENUM_MSG_TYPE_MIN=0,
+  ENUM_MSG_TYPE_REGIST_REQUEST,  //注册请求
+  ENUM_MSG_TYPE_REGIST_RESPOND,   //注册回复
+
+  ENUM_MSG_TYPE_LOGIN_REQUEST,
+  ENUM_MSG_TYPE_LOGIN_RESPOND,
+
+  ENUM_MSG_TYPE_ALL_ONLINE_REQUEST,
+  ENUM_MSG_TYPE_ALL_ONLINE_RESPOND,
+
+  ENUM_MSG_TYPE_SEARCH_USER_REQUEST,
+  ENUM_MSG_TYPE_SEARCH_USER_RESPOND,
+
+  ENUM_MSG_TYPE_ADD_FRIEND_REQUEST,
+  ENUM_MSG_TYPE_ADD_FRIEND_RESPOND,
+  ENUM_MSG_TYPE_ADD_FRIEND_AGGRE,
+  ENUM_MSG_TYPE_ADD_FRIEND_REFUSE,
+
+  ENUM_MSG_TYPE_FLUSH_FRIEND_REQUEST,   //刷新好友请求
+  ENUM_MSG_TYPE_FLUSH_FRIEND_RESPOND,   //刷新好友回复
+
+
+  ENUM_MSG_TYPE_DELETE_FRIEND_REQUEST,  //删除好友请求
+  ENUM_MSG_TYPE_DELETE_FRIEND_RESPOND,  //删除好友回复
+
+
+  ENUM_MSG_TYPE_PRIVATE_CHAT_REQUEST,  //私聊请求
+  ENUM_MSG_TYPE_PRIVATE_CHAT_RESPOND,  //私聊回复
+
+  ENUM_MSG_TYPE_PUBLIC_CHAT_REQUEST,  //群聊请求
+  ENUM_MSG_TYPE_PUBLIC_CHAT_RESPOND,  //群聊回复
+
+  ENUM_MSG_TYPE_CREATE_DIR_REQUEST,   //创建文件夹请求
+  ENUM_MSG_TYPE_CREATE_DIR_RESPOND,   //创建文件夹回复
+
+  ENUM_MSG_TYPE_MAX=0x00ffffff
+};
+
+struct PDU{
+  uint uiPDULen;  //总的协议数据单元大小
+  uint uiMsgType;  //消息类型
+  char caData[64];  //用户名+密码
+  uint uiMsgLen;  //实际长度
+  int caMsg[];  //实际消息，用弹性数组存储
+};
+
+PDU *mkPDU(uint uiMsgLen);
+
+#endif // PROTOCOL_H
